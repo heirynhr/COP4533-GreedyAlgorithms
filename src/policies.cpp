@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
 		// if it is within the vector then it is a hit
 		if (it != CacheObj.cacheRequests.end()) {
 			// yaya hit!
+			// do nothing
 		}
 		else {
 			// UPDATE MISSES
@@ -79,7 +80,8 @@ int main(int argc, char** argv) {
 			else {
 				// else do the policy
 				// run inner cache policy function
-				CacheObj.doFIFO(allRequests[i]);
+				//CacheObj.doFIFO(allRequests[i]);
+				CacheObj.shiftBack(allRequests[i]);
 			}
 		}
 	}
@@ -99,7 +101,8 @@ int main(int argc, char** argv) {
 			// If found, you can dereference the iterator (*it) to access the value
 			//CALL LRU HELPER TO SHIFT
 			//CacheObj.LRUShift(it);
-			CacheObj.doLRU(allRequests[i]);
+			//CacheObj.doLRU(allRequests[i]);
+			CacheObj.shiftBack(allRequests[i]);
 		}
 		else {
 			// UPDATE MISSES
@@ -113,7 +116,8 @@ int main(int argc, char** argv) {
 			else {
 				// else do the policy
 				// run inner cache policy function
-				CacheObj.doLRU(allRequests[i]);
+				//CacheObj.doLRU(allRequests[i]);
+				CacheObj.shiftBack(allRequests[i]);
 			}
 		}
 	}
