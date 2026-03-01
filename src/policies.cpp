@@ -1,5 +1,8 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include "cache.cpp"
 using namespace std;
 // take input from file
 // A cache of capacity ( k ) A sequence of ( m ) requests ( r_1, r_2,.., r_m )
@@ -38,6 +41,17 @@ int main(int argc, char** argv) {
 		throw runtime_error("Invalid 'k' value");
 	}
 
+	vector<int> allRequests;
+	int currentRequest = 0;
+	for (int i = 0; i < m; ++i) {
+		if (in >> currentRequest) {
+			allRequests.push_back(currentRequest);
+		}
+		else {
+			//umm make sure we get them all?
+			throw runtime_error("Didnt read all m requests");
+		}
+	}
 	//create the output file
 	//use the name to be the same
 	string outputFile;
@@ -48,6 +62,55 @@ int main(int argc, char** argv) {
 	else {
 		outputFile = filename + ".out";
 	}
+	ofstream out(outputFile);
+
+
+	//TODO: NEED TO MAKE THIS RUN EVERYTIME FOR EVERY POLICY NEED TO RESET THE CACHE
+	// TODO: need to intialize the cache structure
+	Cache CacheObj(k);
+	// for every request in the requestList  , +1 miss , else do POLICY
+	for (int i = 0; i < allRequests.size(); ++i) {
+		//FIND returns the position it is in!! aka index!!
+		auto it = find(CacheObj.cacheRequests.begin(), CacheObj.cacheRequests.end(), allRequests[i]);
+		// if it is within the vector then it is a hit
+		if (it != CacheObj.cacheRequests.end()) {
+			// yaya hit!
+		}
+		else {
+			// UPDATE MISSES
+			CacheObj.missCount++;
+			//check if cache is full
+			if (CacheObj.cacheRequests.size() < k) {
+				// if not full
+				//add it to the inner cache list
+				CacheObj.cacheRequests.push_back(allRequests[i]);
+
+			}
+			else {
+				// else do the policy
+				// run inner cache policy function
+				CacheObj.doFIFO(allRequests[i]);
+			}
+		}
+		if (allRequests[i]
+		//else
+		// if the request is in the cache inner request list then this is a hit
+		//
+
+	}
+	// write the number of misses into the output file
+	out << "FIFO:" <<  CacheObj.missCount << endl;
+	// RESET CACHE!!!
+	CacheObj.resetCache();
+
+	// redo above except do it for the other polciy aka LRU
+	// write the number of misses into the output file
+	// RESET CACHE!!!
+
+	// redo above except do it for the other polciy aka OPTFF
+	// write the number of misses into the output file
+
+
 
 }
 
