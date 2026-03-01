@@ -24,5 +24,11 @@ struct Cache {
 		cacheRequests.push_back(specificRequest);
 	}
 
-
+	void doLRU(int specificRequest) {
+		//it keeps track of the order in which items are accessed.
+		// so basically if you have a hit/ you need to move that object to the end of the vector and shift everything else forward
+		cacheRequests.erase(cacheRequests.begin());
+		// add the new one
+		cacheRequests.push_back(specificRequest);
+	}
 };

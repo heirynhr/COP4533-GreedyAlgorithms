@@ -89,11 +89,46 @@ int main(int argc, char** argv) {
 	CacheObj.resetCache();
 
 	// redo above except do it for the other polciy aka LRU
+	//similar to the fifo but we ned to do the shift at a hit that makes it different
+	for (int i = 0; i < allRequests.size(); ++i) {
+		//FIND returns the position it is in!! aka index!!
+		auto it = find(CacheObj.cacheRequests.begin(), CacheObj.cacheRequests.end(), allRequests[i]);
+		// if it is within the vector then it is a hit
+		if (it != CacheObj.cacheRequests.end()) {
+			// yaya hit!
+			// If found, you can dereference the iterator (*it) to access the value
+			//CALL LRU HELPER TO SHIFT
+			//CacheObj.LRUShift(it);
+			CacheObj.doLRU(allRequests[i]);
+		}
+		else {
+			// UPDATE MISSES
+			CacheObj.missCount++;
+			//check if cache is full
+			if (CacheObj.cacheRequests.size() < k) {
+				// if not full
+				//add it to the inner cache list
+				CacheObj.cacheRequests.push_back(allRequests[i]);
+			}
+			else {
+				// else do the policy
+				// run inner cache policy function
+				CacheObj.doLRU(allRequests[i]);
+			}
+		}
+	}
 	// write the number of misses into the output file
+	out << "LRU:" <<  CacheObj.missCount << endl;
+	//for (int i = 0; i <  CacheObj.cacheRequests.size(); ++i) {
+	//	out << "LRU Final list:" <<  CacheObj.cacheRequests[i] << endl;
+	//}
+
 	// RESET CACHE!!!
+	CacheObj.resetCache();
 
 	// redo above except do it for the other polciy aka OPTFF
 	// write the number of misses into the output file
+	out << "OPTFF:" <<  CacheObj.missCount << endl;
 
 
 
