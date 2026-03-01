@@ -27,12 +27,6 @@ int main(int argc, char** argv) {
 		throw runtime_error("empty file");
 	}
 
-	//TODO: NEED TO DEAL WITH INPUT K AND M HERE!!
-	// create cache structure with a class/ struct?
-	// this would:
-	// keep track of the maximun capcity k
-	// need to have a vector or something of all the requests maybe?
-
 	// k and m are on the same line
 	int k,m;
 	in >> k >> m;
@@ -64,9 +58,6 @@ int main(int argc, char** argv) {
 	}
 	ofstream out(outputFile);
 
-
-	//TODO: NEED TO MAKE THIS RUN EVERYTIME FOR EVERY POLICY NEED TO RESET THE CACHE
-	// TODO: need to intialize the cache structure
 	Cache CacheObj(k);
 	// for every request in the requestList  , +1 miss , else do POLICY
 	for (int i = 0; i < allRequests.size(); ++i) {
@@ -84,7 +75,6 @@ int main(int argc, char** argv) {
 				// if not full
 				//add it to the inner cache list
 				CacheObj.cacheRequests.push_back(allRequests[i]);
-
 			}
 			else {
 				// else do the policy
@@ -92,11 +82,6 @@ int main(int argc, char** argv) {
 				CacheObj.doFIFO(allRequests[i]);
 			}
 		}
-		if (allRequests[i]
-		//else
-		// if the request is in the cache inner request list then this is a hit
-		//
-
 	}
 	// write the number of misses into the output file
 	out << "FIFO:" <<  CacheObj.missCount << endl;
