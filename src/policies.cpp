@@ -77,10 +77,10 @@ int main(int argc, char** argv) {
 	CacheObj.resetCache();
 
 	// redo above except do it for the other polciy aka OPTFF
+	CacheObj.doOPTFF(allRequests);
 	// write the number of misses into the output file
 	out << "OPTFF:" <<  CacheObj.missCount << endl;
-
-
+	CacheObj.resetCache();
 
 }
 
