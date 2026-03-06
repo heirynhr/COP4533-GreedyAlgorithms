@@ -70,7 +70,9 @@ struct Cache {
 				//CALL LRU HELPER TO SHIFT
 				//CacheObj.LRUShift(it);
 				//CacheObj.doLRU(allRequests[i]);
-				shiftBack(allRequests[i]);
+				cacheRequests.erase(it);
+				cacheRequests.push_back(allRequests[i]);
+				//shiftBack(allRequests[i]);
 			}
 			else {
 				// UPDATE MISSES
@@ -118,7 +120,7 @@ struct Cache {
 
 		// now we need to evict the item whose next req is furthertest in the future or never occurs again
 		// what if multiple never occur again...
-		
+
 		// perform actual algorithm now
 		// use map for easier lookup
 		map<int, int> cache;
