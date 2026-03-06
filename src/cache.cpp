@@ -70,7 +70,9 @@ struct Cache {
 				//CALL LRU HELPER TO SHIFT
 				//CacheObj.LRUShift(it);
 				//CacheObj.doLRU(allRequests[i]);
-				shiftBack(allRequests[i]);
+				//shiftBack(allRequests[i]);
+				cacheRequests.erase(it);
+				cacheRequests.push_back(allRequests[i]);
 			}
 			else {
 				// UPDATE MISSES
