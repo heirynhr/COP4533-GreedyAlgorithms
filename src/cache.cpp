@@ -70,9 +70,7 @@ struct Cache {
 				//CALL LRU HELPER TO SHIFT
 				//CacheObj.LRUShift(it);
 				//CacheObj.doLRU(allRequests[i]);
-				cacheRequests.erase(it);
-				cacheRequests.push_back(allRequests[i]);
-				//shiftBack(allRequests[i]);
+				shiftBack(allRequests[i]);
 			}
 			else {
 				// UPDATE MISSES
@@ -101,10 +99,11 @@ struct Cache {
 			// next_request = [2, 4, 4, 4] *use m to signify that item doesnt appear again in the requests
 			// so basically 1's next use is in index 2, and the rest of the items dont appear again
 
-		vector<int> next_request;
+		int m = allRequests.size();
+		vector<int> next_request(m,m);
 		// iterate through requests in reverse
 		map<int, int> last_seen;
-		for(int i = allRequests.size() - 1; i >= 0; --i){
+		for(int i = m - 1; i >= 0; --i){
 			int curr = allRequests[i];
 
 			// check if this request has already been seen to the right
@@ -113,17 +112,17 @@ struct Cache {
 				// store requests future occurence
 				next_request[i] = last_seen[curr];
 			}
-			else{
-				last_seen[curr] = i;
-			}
+			last_seen[curr] = i;
+			
 		}
 
 		// now we need to evict the item whose next req is furthertest in the future or never occurs again
 		// what if multiple never occur again...
-
+		
 		// perform actual algorithm now
 		// use map for easier lookup
 		map<int, int> cache;
+
 		for(int i = 0; i < allRequests.size(); ++i){
 			int curr = allRequests[i];
 
@@ -132,17 +131,17 @@ struct Cache {
 				cache[curr] = next_request[i];
 			}
 			else{
+				// increment miss count
 				missCount++;
-				if(cache.size() < maxCapacity){
-					// point to the cache entry with the largest next use value
-					auto evict = max_element(cache.begin(), cache.end(),
-                        [](const pair<int,int>& a, const pair<int,int>& b) {
-                            return a.second < b.second;
-                		});
-
-						// remove item from cache
-						cache.erase(evict);
-						cache[curr] = next_request[i];
+				if((int)cache.size() < maxCapacity){
+					cache[curr] = next_request[i];   // not full, just insert
+				} 
+				else {
+					auto evict = max_element(cache.begin(), cache.end(), [](const pair<int,int>& a, const pair<int,int>& b){
+						return a.second < b.second;
+					});
+					cache.erase(evict);
+					cache[curr] = next_request[i];
 				}
 			}
 		}
